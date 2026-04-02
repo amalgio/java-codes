@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Lab Programs</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1c2333;
+    --bg4: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --yellow: #e3b341;
+    --keyword: #ff7b72;
+    --string: #a5d6ff;
+    --comment: #8b949e;
+    --type: #79c0ff;
+    --number: #f0b72f;
+    --sidebar-w: 280px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  #sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Overlay behind sidebar when open */
+  #sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+  }
+
+  #sidebar-overlay.show {
+    display: block;
+  }
+
+  /* ── HAMBURGER BUTTON ── */
+  .hamburger-btn {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 101;
+    width: 40px;
+    height: 40px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .hamburger-btn:hover {
+    background: var(--bg3);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hamburger-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Close button inside sidebar */
+  .sidebar-close {
+    position: absolute;
+    top: 16px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.15s;
+    z-index: 10;
+  }
+
+  .sidebar-close:hover {
+    background: var(--bg3);
+    color: var(--text);
+    border-color: var(--accent3);
+  }
+
+  .sidebar-close svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .sidebar-logo {
+    padding: 20px 18px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-logo .logo-icon {
+    width: 32px; height: 32px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .sidebar-logo .logo-icon svg {
+    width: 32px; height: 32px;
+  }
+
+  .sidebar-logo span {
+    font-size: 13px; font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+  }
+
+  .sidebar-section-label {
+    padding: 14px 18px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+  }
+
+  .sidebar-item:hover {
+    background: var(--bg3);
+    color: var(--text);
+    border-left-color: var(--accent);
+  }
+
+  .sidebar-item.active {
+    background: rgba(88,166,255,0.08);
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+
+  .sidebar-item .ex-badge {
+    min-width: 22px; height: 18px;
+    background: var(--bg4);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text3);
+    flex-shrink: 0;
+  }
+
+  .sidebar-item.active .ex-badge {
+    background: rgba(88,166,255,0.15);
+    color: var(--accent);
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    margin-left: 0;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP HEADER ── */
+  .top-header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 48px 22px 72px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .header-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .header-title span { color: var(--accent); }
+
+  .header-subtitle {
+    font-size: 14px;
+    color: var(--text2);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 14px;
+  }
+
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  /* ── CONTENT AREA ── */
+  .content {
+    padding: 36px 48px;
+    flex: 1;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.3px;
+  }
+
+  .section-desc {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 400;
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .section-special {
+    background: linear-gradient(90deg, rgba(88,166,255,0.06), transparent);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 18px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  /* ── EXPERIMENT CARD ── */
+  .exp-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .exp-card:hover {
+    border-color: rgba(88,166,255,0.35);
+  }
+
+  .exp-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .exp-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .exp-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .exp-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.2px;
+  }
+
+  .exp-lang-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+    background: rgba(63,185,80,0.1);
+    border: 1px solid rgba(63,185,80,0.2);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  .exp-toggle {
+    font-size: 18px;
+    color: var(--text3);
+    transition: transform 0.2s;
+  }
+
+  .exp-card.collapsed .exp-toggle { transform: rotate(-90deg); }
+
+  .exp-body { display: block; }
+  .exp-card.collapsed .exp-body { display: none; }
+
+  /* ── CODE BLOCK ── */
+  .code-section {
+    position: relative;
+  }
+
+  .code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px;
+    background: #0d1117;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+
+  .file-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    margin-left: 6px;
+  }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover {
+    background: var(--bg3);
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  .copy-btn.copied {
+    color: var(--accent2);
+    border-color: var(--accent2);
+  }
+
+  .copy-btn svg { width: 13px; height: 13px; }
+
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 20px 20px 20px 0;
+    overflow-x: auto;
+    background: #0d1117;
+    counter-reset: line;
+  }
+
+  .line {
+    display: flex;
+    min-height: 22px;
+  }
+
+  .line-num {
+    min-width: 48px;
+    text-align: right;
+    padding-right: 18px;
+    color: #3d444d;
+    font-size: 12px;
+    user-select: none;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .line-code { flex: 1; white-space: pre; }
+
+  .kw { color: #ff7b72; }
+  .cl { color: #f0883e; }
+  .fn { color: #d2a8ff; }
+  .st { color: #a5d6ff; }
+  .cm { color: #8b949e; font-style: italic; }
+  .nm { color: #79c0ff; }
+  .nu { color: #f0b72f; }
+  .op { color: #ff7b72; }
+  .va { color: #ffa657; }
+
+  /* ── OUTPUT BLOCK ── */
+  .output-section {
+    border-top: 1px solid var(--border);
+  }
+
+  .output-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .output-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .output-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .output-pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 16px 20px;
+    background: #0a0e14;
+    color: var(--accent2);
+    white-space: pre-wrap;
+    overflow-x: auto;
+    min-height: 48px;
+  }
+
+  .output-input { color: #8b949e; }
+  .output-prompt { color: var(--accent5); }
+  .output-error { color: var(--accent3); }
+
+  /* ── ADDITIONAL SECTION HEADER ── */
+  .additional-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: linear-gradient(90deg, rgba(210,168,255,0.06), rgba(88,166,255,0.03));
+    border: 1px solid rgba(210,168,255,0.15);
+    border-radius: 10px;
+  }
+
+  .additional-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, rgba(210,168,255,0.2), rgba(88,166,255,0.1));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .additional-title { font-size: 20px; font-weight: 700; color: var(--accent4); }
+  .additional-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    background: var(--bg2);
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer span { color: var(--accent2); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  /* Anchors */
+  .anchor { scroll-margin-top: 100px; }
+</style>
+</head>
+<body>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+  }
+</script>
+
+<!-- HAMBURGER BUTTON -->
+<button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- OVERLAY -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <button class="sidebar-close" onclick="closeSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="6" y1="6" x2="18" y2="18"/>
+      <line x1="18" y1="6" x2="6" y2="18"/>
+    </svg>
+  </button>
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 256 346" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+        <path d="M82.554 267.473s-13.198 7.675 9.393 10.272c27.369 3.122 41.356 2.675 71.517-3.034 0 0 7.93 4.972 19.003 9.279-67.611 28.977-153.019-1.679-99.913-16.517m-8.262-37.814s-14.803 10.958 7.805 13.296c29.236 3.016 52.324 3.263 92.276-4.43 0 0 5.526 5.602 14.215 8.666-81.747 23.904-172.842 1.885-114.296-17.532" fill="#5382A1"/>
+        <path d="M143.942 165.515c16.66 19.18-4.377 36.44-4.377 36.44s42.301-21.837 22.874-49.183c-18.144-25.5-32.059-38.172 43.268-81.858 0 0-118.238 29.53-61.765 94.601" fill="#E76F00"/>
+        <path d="M233.364 295.442s9.767 8.047-10.757 14.273c-39.026 11.823-162.432 15.393-196.714.471-12.323-5.36 10.787-12.8 18.056-14.362 7.581-1.644 11.914-1.337 11.914-1.337-13.705-9.655-88.583 18.957-38.034 27.15 137.853 22.356 251.292-10.066 215.535-26.195M88.9 190.48s-62.771 14.907-22.228 20.323c17.118 2.292 51.243 1.774 83.03-.89 25.978-2.19 52.063-6.85 52.063-6.85s-9.16 3.923-15.787 8.448c-63.744 16.765-186.886 8.966-151.435-8.183 29.981-14.492 54.357-12.848 54.357-12.848m112.605 62.942c64.799-33.672 34.839-66.03 13.927-61.67-5.126 1.066-7.411 1.99-7.411 1.99s1.903-3.338 5.53-4.781c41.328-14.54 73.123 42.897-13.36 65.647 0 0 1.003-.895 1.314-1.186" fill="#5382A1"/>
+        <path d="M162.439.371s35.888 35.9-34.036 91.101c-56.07 44.282-12.786 69.53-.023 98.377-32.73-29.53-56.75-55.526-40.63-79.769C111.395 74.612 176.918 57.393 162.439.371" fill="#E76F00"/>
+        <path d="M95.268 344.665c62.199 3.982 157.712-2.209 159.974-31.64 0 0-4.348 11.158-51.404 20.018-53.088 9.99-118.564 8.824-157.399 2.421 0 0 7.951 6.58 48.829 9.201" fill="#5382A1"/>
+      </svg>
+    </div>
+    <span>Java Lab<br>Programs</span>
+  </div>
+
+  <div class="sidebar-section-label">Experiments</div>
+
+  <a class="sidebar-item" href="#basic" onclick="setActive(this)">
+    <span class="ex-badge">1–8</span> Basic Java Programs
+  </a>
+  <a class="sidebar-item" href="#ex9" onclick="setActive(this)">
+    <span class="ex-badge">9</span> Bubble Sort
+  </a>
+  <a class="sidebar-item" href="#ex10" onclick="setActive(this)">
+    <span class="ex-badge">10</span> Insertion Sort
+  </a>
+  <a class="sidebar-item" href="#ex11" onclick="setActive(this)">
+    <span class="ex-badge">11</span> Selection Sort
+  </a>
+  <a class="sidebar-item" href="#ex12" onclick="setActive(this)">
+    <span class="ex-badge">12</span> Merge Sort
+  </a>
+  <a class="sidebar-item" href="#ex13" onclick="setActive(this)">
+    <span class="ex-badge">13</span> Quick Sort
+  </a>
+  <a class="sidebar-item" href="#ex14" onclick="setActive(this)">
+    <span class="ex-badge">14</span> Inheritance
+  </a>
+  <a class="sidebar-item" href="#ex15" onclick="setActive(this)">
+    <span class="ex-badge">15</span> Abstraction &amp; Interfaces
+  </a>
+  <a class="sidebar-item" href="#ex16" onclick="setActive(this)">
+    <span class="ex-badge">16</span> Exception Handling
+  </a>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-section-label">Additional</div>
+  <a class="sidebar-item" href="#additional" onclick="setActive(this)">
+    <span class="ex-badge">+</span> Extra Programs
+  </a>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- TOP HEADER -->
+  <div class="top-header">
+    <div class="header-badge">☕ Java</div>
+    <div class="header-title"><span>//</span> Java Lab Programs</div>
+    <div class="header-subtitle">
+  Object Oriented Programming Laboratory — Complete Experiment Record<br>
+  <strong>Name:</strong> AMALGIO L &nbsp; | &nbsp;
+  <strong>Reg No:</strong> 311124106003 &nbsp; | &nbsp;
+  <strong>Dept:</strong> ECE 2nd Year
+</div>
+    <div class="header-stats">
+      <div class="stat-chip"><div class="stat-dot" style="background:var(--accent2)"></div>16 Experiments</div>
+      <div class="stat-chip"><div class="stat-dot" style="background:var(--accent4)"></div>2 Additional Programs</div>
+      <div class="stat-chip"><div class="stat-dot" style="background:var(--accent5)"></div>Java SE</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════════════════════════════════════
+         EX 1–8 : BASIC JAVA PROGRAMS
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="basic">
+      <div class="section-header">
+        <span class="section-number">EX 1 – 8</span>
+        <span class="section-title">Basic Java Programs</span>
+        <span class="section-desc">input · output · loops · conditions · operators · arrays</span>
+      </div>
+      <div class="section-special">
+        Includes input/output programs, control flow (if-else, loops), operators, and array operations. Each program demonstrates a fundamental Java concept using VS Code.
+      </div>
+
+      <!-- 1. Hello World -->
+      <div class="exp-card" id="card-hello">
+        <div class="exp-card-header" onclick="toggleCard('card-hello')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 1</span>
+            <span class="exp-name">Hello World</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">Hello.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-hello')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-hello"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">Hello</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Hello world"</span>);</span></div><div class="line"><span class="line-num">4</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">5</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar">
+              <div class="output-label"><div class="output-dot"></div>Output</div>
+            </div>
+            <div class="output-pre">Hello world</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Name -->
+      <div class="exp-card" id="card-name">
+        <div class="exp-card-header" onclick="toggleCard('card-name')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 2</span>
+            <span class="exp-name">Print Name</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">Name.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-name')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-name"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">Name</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"My name is AMALGIO"</span>);</span></div><div class="line"><span class="line-num">4</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">5</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">My name is AMALGIO</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Addition -->
+      <div class="exp-card" id="card-add">
+        <div class="exp-card-header" onclick="toggleCard('card-add')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 3</span>
+            <span class="exp-name">Addition of Two Numbers</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">Addition.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-add')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-add"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">Addition</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">a</span>=<span class="nu">10</span>, <span class="va">b</span>=<span class="nu">20</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        System.out.<span class="fn">println</span>(a+b);</span></div><div class="line"><span class="line-num">5</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">6</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">30</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Largest of Two -->
+      <div class="exp-card" id="card-largest">
+        <div class="exp-card-header" onclick="toggleCard('card-largest')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 4</span>
+            <span class="exp-name">Largest of Two Numbers</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">LargestTwo.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-largest')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-largest"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">LargestTwo</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">a</span>=<span class="nu">10</span>, <span class="va">b</span>=<span class="nu">20</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        System.out.<span class="fn">println</span>(a&gt;b ? a : b);</span></div><div class="line"><span class="line-num">5</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">6</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">20</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Even Odd -->
+      <div class="exp-card" id="card-evenodd">
+        <div class="exp-card-header" onclick="toggleCard('card-evenodd')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 5</span>
+            <span class="exp-name">Even or Odd</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">EvenOdd.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-evenodd')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-evenodd"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">EvenOdd</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">num</span>=<span class="nu">6</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">if</span>(num%<span class="nu">2</span>==<span class="nu">0</span>)</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"Even"</span>);</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        <span class="kw">else</span></span></div><div class="line"><span class="line-num">7</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"Odd"</span>);</span></div><div class="line"><span class="line-num">8</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">9</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Even</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Factorial -->
+      <div class="exp-card" id="card-fact">
+        <div class="exp-card-header" onclick="toggleCard('card-fact')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 6</span>
+            <span class="exp-name">Factorial</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">Factorial.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-fact')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-fact"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">Factorial</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">n</span>=<span class="nu">5</span>, <span class="va">fact</span>=<span class="nu">1</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">for</span>(<span class="kw">int</span> <span class="va">i</span>=<span class="nu">1</span>; i&lt;=n; i++)</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            fact*=i;</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        System.out.<span class="fn">println</span>(fact);</span></div><div class="line"><span class="line-num">7</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">8</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">120</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. For Loop / While Loop / Do-While + IfElse -->
+      <div class="exp-card" id="card-forloop">
+        <div class="exp-card-header" onclick="toggleCard('card-forloop')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 7</span>
+            <span class="exp-name">For Loop</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">ForLoop.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-forloop')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-forloop"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">ForLoop</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] argv) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">for</span>(<span class="kw">int</span> <span class="va">i</span>=<span class="nu">1</span>; i&lt;=<span class="nu">5</span>; i++)</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        System.out.<span class="fn">println</span>(i);</span></div><div class="line"><span class="line-num">5</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">6</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">1
+2
+3
+4
+5</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-card" id="card-while">
+        <div class="exp-card-header" onclick="toggleCard('card-while')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 7b</span>
+            <span class="exp-name">While Loop</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">whileLoop.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-while')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-while"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">whileLoop</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">i</span>=<span class="nu">1</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">while</span>(i&lt;=<span class="nu">5</span>) {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            System.out.<span class="fn">println</span>(i);</span></div><div class="line"><span class="line-num">6</span><span class="line-code">            i++;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">8</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">9</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">1
+2
+3
+4
+5</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-card" id="card-dowhile">
+        <div class="exp-card-header" onclick="toggleCard('card-dowhile')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 7c</span>
+            <span class="exp-name">Do-While Loop</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">DoWhileLoop.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-dowhile')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-dowhile"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">DoWhileLoop</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">i</span>=<span class="nu">1</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">do</span> {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            System.out.<span class="fn">println</span>(i);</span></div><div class="line"><span class="line-num">6</span><span class="line-code">            i++;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">        } <span class="kw">while</span>(i&lt;=<span class="nu">5</span>);</span></div><div class="line"><span class="line-num">8</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">9</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">1
+2
+3
+4
+5</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. If-Else -->
+      <div class="exp-card" id="card-ifelse">
+        <div class="exp-card-header" onclick="toggleCard('card-ifelse')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 8</span>
+            <span class="exp-name">If-Else (Divisibility Check)</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">IfElse.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-ifelse')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-ifelse"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">import</span> java.util.Scanner;</span></div><div class="line"><span class="line-num">2</span><span class="line-code"><span class="kw">class</span> <span class="cl">IfElse</span> {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        Scanner <span class="va">sc</span> = <span class="kw">new</span> <span class="cl">Scanner</span>(System.in);</span></div><div class="line"><span class="line-num">5</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter any one number from 1 to 9:"</span>);</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        <span class="kw">int</span> <span class="va">num</span> = sc.<span class="fn">nextInt</span>();</span></div><div class="line"><span class="line-num">7</span><span class="line-code">        <span class="kw">if</span>(num % <span class="nu">2</span> == <span class="nu">0</span>)</span></div><div class="line"><span class="line-num">8</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"It is divisible by 2"</span>);</span></div><div class="line"><span class="line-num">9</span><span class="line-code">        <span class="kw">else</span></span></div><div class="line"><span class="line-num">10</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"It is not divisible by 2"</span>);</span></div><div class="line"><span class="line-num">11</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">12</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output — Sample Input: 4</div></div>
+            <div class="output-pre"><span class="output-prompt">Enter any one number from 1 to 9:</span>
+<span class="output-input">4</span>
+It is divisible by 2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 9 : BUBBLE SORT
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex9">
+      <div class="section-header">
+        <span class="section-number">EX 9</span>
+        <span class="section-title">Bubble Sort</span>
+        <span class="section-desc">Arrays · Single class</span>
+      </div>
+      <div class="exp-card" id="card-bubble">
+        <div class="exp-card-header" onclick="toggleCard('card-bubble')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 9</span>
+            <span class="exp-name">Bubble Sort</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">BubbleSort.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-bubble')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-bubble"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">BubbleSort</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">5</span>, <span class="nu">1</span>, <span class="nu">4</span>, <span class="nu">2</span>, <span class="nu">8</span>};</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">for</span> (<span class="kw">int</span> <span class="va">i</span> = <span class="nu">0</span>; i &lt; arr.length - <span class="nu">1</span>; i++) {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            <span class="kw">for</span> (<span class="kw">int</span> <span class="va">j</span> = <span class="nu">0</span>; j &lt; arr.length - <span class="nu">1</span> - i; j++) {</span></div><div class="line"><span class="line-num">6</span><span class="line-code">                <span class="kw">if</span> (arr[j] &gt; arr[j + <span class="nu">1</span>]) {</span></div><div class="line"><span class="line-num">7</span><span class="line-code">                    <span class="kw">int</span> <span class="va">temp</span> = arr[j];</span></div><div class="line"><span class="line-num">8</span><span class="line-code">                    arr[j] = arr[j + <span class="nu">1</span>];</span></div><div class="line"><span class="line-num">9</span><span class="line-code">                    arr[j + <span class="nu">1</span>] = temp;</span></div><div class="line"><span class="line-num">10</span><span class="line-code">                }</span></div><div class="line"><span class="line-num">11</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">12</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">13</span><span class="line-code">        <span class="kw">for</span> (<span class="kw">int</span> <span class="va">i</span> = <span class="nu">0</span>; i &lt; arr.length; i++) {</span></div><div class="line"><span class="line-num">14</span><span class="line-code">            System.out.<span class="fn">print</span>(arr[i] + <span class="st">" "</span>);</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">16</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">17</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">1 2 4 5 8 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 10 : INSERTION SORT
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex10">
+      <div class="section-header">
+        <span class="section-number">EX 10</span>
+        <span class="section-title">Insertion Sort</span>
+        <span class="section-desc">Arrays · Single class</span>
+      </div>
+      <div class="exp-card" id="card-insertion">
+        <div class="exp-card-header" onclick="toggleCard('card-insertion')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 10</span>
+            <span class="exp-name">Insertion Sort</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">InsertionSort.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-insertion')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-insertion"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">InsertionSort</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">5</span>, <span class="nu">3</span>, <span class="nu">1</span>, <span class="nu">4</span>, <span class="nu">2</span>};</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">for</span> (<span class="kw">int</span> <span class="va">i</span> = <span class="nu">1</span>; i &lt; arr.length; i++) {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            <span class="kw">int</span> <span class="va">key</span> = arr[i];</span></div><div class="line"><span class="line-num">6</span><span class="line-code">            <span class="kw">int</span> <span class="va">j</span> = i - <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">            <span class="kw">while</span> (j &gt;= <span class="nu">0</span> &amp;&amp; arr[j] &gt; key) {</span></div><div class="line"><span class="line-num">8</span><span class="line-code">                arr[j + <span class="nu">1</span>] = arr[j];</span></div><div class="line"><span class="line-num">9</span><span class="line-code">                j--;</span></div><div class="line"><span class="line-num">10</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">11</span><span class="line-code">            arr[j + <span class="nu">1</span>] = key;</span></div><div class="line"><span class="line-num">12</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">13</span><span class="line-code">        <span class="kw">for</span> (<span class="kw">int</span> <span class="va">i</span> = <span class="nu">0</span>; i &lt; arr.length; i++) {</span></div><div class="line"><span class="line-num">14</span><span class="line-code">            System.out.<span class="fn">print</span>(arr[i] + <span class="st">" "</span>);</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">16</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">17</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">1 2 3 4 5 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 11 : SELECTION SORT
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex11">
+      <div class="section-header">
+        <span class="section-number">EX 11</span>
+        <span class="section-title">Selection Sort</span>
+        <span class="section-desc">Arrays · Single class</span>
+      </div>
+      <div class="exp-card" id="card-selection">
+        <div class="exp-card-header" onclick="toggleCard('card-selection')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 11</span>
+            <span class="exp-name">Selection Sort</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">SelectionSort.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-selection')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-selection"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">SelectionSort</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">64</span>, <span class="nu">25</span>, <span class="nu">12</span>, <span class="nu">22</span>, <span class="nu">11</span>};</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">for</span>(<span class="kw">int</span> <span class="va">i</span> = <span class="nu">0</span>; i &lt; arr.length-<span class="nu">1</span>; i++) {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            <span class="kw">int</span> <span class="va">min</span> = i;</span></div><div class="line"><span class="line-num">6</span><span class="line-code">            <span class="kw">for</span>(<span class="kw">int</span> <span class="va">j</span> = i+<span class="nu">1</span>; j &lt; arr.length; j++) {</span></div><div class="line"><span class="line-num">7</span><span class="line-code">                <span class="kw">if</span>(arr[j] &lt; arr[min]) { min=j; }</span></div><div class="line"><span class="line-num">8</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">9</span><span class="line-code">            <span class="kw">int</span> <span class="va">temp</span> = arr[min]; arr[min] = arr[i]; arr[i] = temp;</span></div><div class="line"><span class="line-num">10</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        <span class="kw">for</span>(<span class="kw">int</span> <span class="va">i</span> = <span class="nu">0</span>; i &lt; arr.length; i++) {</span></div><div class="line"><span class="line-num">12</span><span class="line-code">            System.out.<span class="fn">print</span>(arr[i] + <span class="st">" "</span>);</span></div><div class="line"><span class="line-num">13</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">14</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">15</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">11 12 22 25 64 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 12 : MERGE SORT
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex12">
+      <div class="section-header">
+        <span class="section-number">EX 12</span>
+        <span class="section-title">Merge Sort</span>
+        <span class="section-desc">Arrays · Single class</span>
+      </div>
+      <div class="exp-card" id="card-merge">
+        <div class="exp-card-header" onclick="toggleCard('card-merge')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 12</span>
+            <span class="exp-name">Merge Sort</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">MergeSort.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-merge')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-merge"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">public class</span> <span class="cl">MergeSort</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">3</span>,<span class="nu">1</span>,<span class="nu">2</span>,<span class="nu">6</span>,<span class="nu">5</span>};</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">int</span> <span class="va">n</span> = arr.length;</span></div><div class="line"><span class="line-num">5</span><span class="line-code">        <span class="kw">for</span>(<span class="kw">int</span> <span class="va">currsize</span> = <span class="nu">1</span>; currsize &lt;= n-<span class="nu">1</span>; currsize = <span class="nu">2</span>*currsize) {</span></div><div class="line"><span class="line-num">6</span><span class="line-code">            <span class="kw">for</span>(<span class="kw">int</span> <span class="va">leftstart</span>=<span class="nu">0</span>; leftstart&lt;n-<span class="nu">1</span>; leftstart+=<span class="nu">2</span>*currsize) {</span></div><div class="line"><span class="line-num">7</span><span class="line-code">                <span class="kw">int</span> <span class="va">mid</span> = Math.<span class="fn">min</span>(leftstart+currsize-<span class="nu">1</span>, n-<span class="nu">1</span>);</span></div><div class="line"><span class="line-num">8</span><span class="line-code">                <span class="kw">int</span> <span class="va">rightend</span> = Math.<span class="fn">min</span>(leftstart+<span class="nu">2</span>*currsize-<span class="nu">1</span>, n-<span class="nu">1</span>);</span></div><div class="line"><span class="line-num">9</span><span class="line-code">                <span class="kw">int</span> <span class="va">n1</span> = mid-leftstart+<span class="nu">1</span>, <span class="va">n2</span> = rightend-mid;</span></div><div class="line"><span class="line-num">10</span><span class="line-code">                <span class="kw">int</span>[] <span class="va">l</span> = <span class="kw">new int</span>[n1], <span class="va">r</span> = <span class="kw">new int</span>[n2];</span></div><div class="line"><span class="line-num">11</span><span class="line-code">                <span class="kw">for</span>(<span class="kw">int</span> <span class="va">i</span>=<span class="nu">0</span>; i&lt;n1; i++) l[i]=arr[leftstart+i];</span></div><div class="line"><span class="line-num">12</span><span class="line-code">                <span class="kw">for</span>(<span class="kw">int</span> <span class="va">j</span>=<span class="nu">0</span>; j&lt;n2; j++) r[j]=arr[mid+<span class="nu">1</span>+j];</span></div><div class="line"><span class="line-num">13</span><span class="line-code">                <span class="kw">int</span> <span class="va">i</span>=<span class="nu">0</span>, <span class="va">j</span>=<span class="nu">0</span>, <span class="va">k</span>=leftstart;</span></div><div class="line"><span class="line-num">14</span><span class="line-code">                <span class="kw">while</span>(i&lt;n1 &amp;&amp; j&lt;n2) {</span></div><div class="line"><span class="line-num">15</span><span class="line-code">                    <span class="kw">if</span>(l[i]&lt;=r[j]) arr[k++]=l[i++];</span></div><div class="line"><span class="line-num">16</span><span class="line-code">                    <span class="kw">else</span> arr[k++]=r[j++];</span></div><div class="line"><span class="line-num">17</span><span class="line-code">                }</span></div><div class="line"><span class="line-num">18</span><span class="line-code">                <span class="kw">while</span>(i&lt;n1) arr[k++]=l[i++];</span></div><div class="line"><span class="line-num">19</span><span class="line-code">                <span class="kw">while</span>(j&lt;n2) arr[k++]=r[j++];</span></div><div class="line"><span class="line-num">20</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">21</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">22</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Sorted Array:"</span>);</span></div><div class="line"><span class="line-num">23</span><span class="line-code">        <span class="kw">for</span>(<span class="kw">int</span> <span class="va">val</span> : arr) System.out.<span class="fn">println</span>(val+<span class="st">""</span>);</span></div><div class="line"><span class="line-num">24</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">25</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Sorted Array:
+1
+2
+3
+5
+6</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 13 : QUICK SORT
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex13">
+      <div class="section-header">
+        <span class="section-number">EX 13</span>
+        <span class="section-title">Quick Sort</span>
+        <span class="section-desc">Arrays · Single class</span>
+      </div>
+      <div class="exp-card" id="card-quick">
+        <div class="exp-card-header" onclick="toggleCard('card-quick')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 13</span>
+            <span class="exp-name">Quick Sort</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">QuickSort.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-quick')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-quick"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">class</span> <span class="cl">QuickSort</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">1</span>, <span class="nu">4</span>, <span class="nu">5</span>, <span class="nu">6</span>};</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">int</span> <span class="va">n</span> = arr.length;</span></div><div class="line"><span class="line-num">5</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">stack</span> = <span class="kw">new int</span>[<span class="nu">2</span> * n];</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        <span class="kw">int</span> <span class="va">top</span> = -<span class="nu">1</span>;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">        stack[++top] = <span class="nu">0</span>; stack[++top] = n - <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">8</span><span class="line-code">        <span class="kw">while</span> (top &gt;= <span class="nu">0</span>) {</span></div><div class="line"><span class="line-num">9</span><span class="line-code">            <span class="kw">int</span> <span class="va">h</span> = stack[top--], <span class="va">l</span> = stack[top--];</span></div><div class="line"><span class="line-num">10</span><span class="line-code">            <span class="kw">int</span> <span class="va">pivot</span> = arr[h], <span class="va">i</span> = l - <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">11</span><span class="line-code">            <span class="kw">for</span> (<span class="kw">int</span> <span class="va">j</span> = l; j &lt; h; j++) {</span></div><div class="line"><span class="line-num">12</span><span class="line-code">                <span class="kw">if</span> (arr[j] &lt;= pivot) { i++; <span class="kw">int</span> t=arr[i]; arr[i]=arr[j]; arr[j]=t; }</span></div><div class="line"><span class="line-num">13</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">14</span><span class="line-code">            <span class="kw">int</span> t=arr[i+<span class="nu">1</span>]; arr[i+<span class="nu">1</span>]=arr[h]; arr[h]=t;</span></div><div class="line"><span class="line-num">15</span><span class="line-code">            <span class="kw">int</span> <span class="va">p</span> = i + <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">16</span><span class="line-code">            <span class="kw">if</span> (p - <span class="nu">1</span> &gt; l) { stack[++top]=l; stack[++top]=p-<span class="nu">1</span>; }</span></div><div class="line"><span class="line-num">17</span><span class="line-code">            <span class="kw">if</span> (p + <span class="nu">1</span> &lt; h) { stack[++top]=p+<span class="nu">1</span>; stack[++top]=h; }</span></div><div class="line"><span class="line-num">18</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">19</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Sorted:"</span>);</span></div><div class="line"><span class="line-num">20</span><span class="line-code">        <span class="kw">for</span> (<span class="kw">int</span> <span class="va">val</span> : arr) System.out.<span class="fn">println</span>(val);</span></div><div class="line"><span class="line-num">21</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">22</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Sorted:
+1
+2
+3
+4
+5
+6</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 14 : INHERITANCE
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex14">
+      <div class="section-header">
+        <span class="section-number">EX 14</span>
+        <span class="section-title">Inheritance</span>
+        <span class="section-desc">Hierarchical Inheritance</span>
+      </div>
+      <div class="exp-card" id="card-inherit">
+        <div class="exp-card-header" onclick="toggleCard('card-inherit')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 14</span>
+            <span class="exp-name">Employee Pay Slip — Hierarchical Inheritance</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">Inheritance.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-inherit')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-inherit"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">import</span> java.util.*;</span></div><div class="line"><span class="line-num">2</span><span class="line-code"></span></div><div class="line"><span class="line-num">3</span><span class="line-code"><span class="kw">class</span> <span class="cl">Employee</span> {</span></div><div class="line"><span class="line-num">4</span><span class="line-code">    String <span class="va">emp_name</span>, <span class="va">address</span>, <span class="va">mail_id</span>;</span></div><div class="line"><span class="line-num">5</span><span class="line-code">    <span class="kw">int</span> <span class="va">emp_id</span>;</span></div><div class="line"><span class="line-num">6</span><span class="line-code">    <span class="kw">long</span> <span class="va">mobile_no</span>;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">}</span></div><div class="line"><span class="line-num">8</span><span class="line-code"><span class="kw">class</span> <span class="cl">Programmer</span> <span class="kw">extends</span> <span class="cl">Employee</span> {</span></div><div class="line"><span class="line-num">9</span><span class="line-code">    <span class="kw">double</span> <span class="va">bp</span>, <span class="va">da</span>, <span class="va">hra</span>, <span class="va">pf</span>, <span class="va">staff</span>, <span class="va">gross</span>, <span class="va">net</span>;</span></div><div class="line"><span class="line-num">10</span><span class="line-code">    <span class="kw">void</span> <span class="fn">getData</span>(Scanner input) {</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter name: "</span>); emp_name = input.<span class="fn">next</span>();</span></div><div class="line"><span class="line-num">12</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter ID: "</span>); emp_id = input.<span class="fn">nextInt</span>();</span></div><div class="line"><span class="line-num">13</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter address: "</span>); address = input.<span class="fn">next</span>();</span></div><div class="line"><span class="line-num">14</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter mail id: "</span>); mail_id = input.<span class="fn">next</span>();</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter mobile no: "</span>); mobile_no = input.<span class="fn">nextLong</span>();</span></div><div class="line"><span class="line-num">16</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Enter Basic pay: "</span>); bp = input.<span class="fn">nextDouble</span>();</span></div><div class="line"><span class="line-num">17</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">18</span><span class="line-code">    <span class="kw">void</span> <span class="fn">calculate</span>() {</span></div><div class="line"><span class="line-num">19</span><span class="line-code">        da = <span class="nu">0.97</span>*bp; hra = <span class="nu">0.10</span>*bp; pf = <span class="nu">0.12</span>*bp; staff = <span class="nu">0.001</span>*bp;</span></div><div class="line"><span class="line-num">20</span><span class="line-code">        gross = bp+da+hra; net = gross-(pf+staff);</span></div><div class="line"><span class="line-num">21</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">22</span><span class="line-code">    <span class="kw">void</span> <span class="fn">display</span>() {</span></div><div class="line"><span class="line-num">23</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"----------Pay Slip----------"</span>);</span></div><div class="line"><span class="line-num">24</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Name: "</span>+emp_name);</span></div><div class="line"><span class="line-num">25</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"ID: "</span>+emp_id);</span></div><div class="line"><span class="line-num">26</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Gross salary: "</span>+net);</span></div><div class="line"><span class="line-num">27</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">28</span><span class="line-code">}</span></div><div class="line"><span class="line-num">29</span><span class="line-code"><span class="kw">class</span> <span class="cl">AssistantProfessor</span> <span class="kw">extends</span> <span class="cl">Programmer</span> {}</span></div><div class="line"><span class="line-num">30</span><span class="line-code"><span class="kw">class</span> <span class="cl">AssociateProfessor</span> <span class="kw">extends</span> <span class="cl">Programmer</span> {}</span></div><div class="line"><span class="line-num">31</span><span class="line-code"><span class="kw">class</span> <span class="cl">Professor</span> <span class="kw">extends</span> <span class="cl">Programmer</span> {}</span></div><div class="line"><span class="line-num">32</span><span class="line-code"></span></div><div class="line"><span class="line-num">33</span><span class="line-code"><span class="kw">public class</span> <span class="cl">Inheritance</span> {</span></div><div class="line"><span class="line-num">34</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">35</span><span class="line-code">        Scanner <span class="va">input</span> = <span class="kw">new</span> <span class="cl">Scanner</span>(System.in);</span></div><div class="line"><span class="line-num">36</span><span class="line-code">        Programmer <span class="va">P</span> = <span class="kw">new</span> <span class="cl">Programmer</span>();</span></div><div class="line"><span class="line-num">37</span><span class="line-code">        P.<span class="fn">getData</span>(input); P.<span class="fn">calculate</span>(); P.<span class="fn">display</span>();</span></div><div class="line"><span class="line-num">38</span><span class="line-code">        input.<span class="fn">close</span>();</span></div><div class="line"><span class="line-num">39</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">40</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output — Sample Input</div></div>
+            <div class="output-pre"><span class="output-prompt">Enter name: </span><span class="output-input">Amalgio</span>
+<span class="output-prompt">Enter ID: </span><span class="output-input">101</span>
+<span class="output-prompt">Enter address: </span><span class="output-input">Chennai</span>
+<span class="output-prompt">Enter mail id: </span><span class="output-input"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c9a8a4a8a5aea0a689a4a8a0a5e7aaa6a4">[email&#160;protected]</a></span>
+<span class="output-prompt">Enter mobile no: </span><span class="output-input">9876543210</span>
+<span class="output-prompt">Enter Basic pay: </span><span class="output-input">50000</span>
+----------Pay Slip----------
+Name: Amalgio
+ID: 101
+Gross salary: 102450.0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 15 : ABSTRACTION & INTERFACES
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex15">
+      <div class="section-header">
+        <span class="section-number">EX 15</span>
+        <span class="section-title">Abstraction and Interfaces</span>
+        <span class="section-desc">Abstract classes &amp; Interface</span>
+      </div>
+      <div class="exp-card" id="card-abstract">
+        <div class="exp-card-header" onclick="toggleCard('card-abstract')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 15</span>
+            <span class="exp-name">Shape Area — Abstract Class</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">InterfaceAbstraction.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-abstract')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-abstract"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">abstract class</span> <span class="cl">Shape</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">int</span> <span class="va">a</span>; <span class="kw">int</span> <span class="va">b</span>;</span></div><div class="line"><span class="line-num">3</span><span class="line-code">    <span class="kw">abstract void</span> <span class="fn">printArea</span>();</span></div><div class="line"><span class="line-num">4</span><span class="line-code">}</span></div><div class="line"><span class="line-num">5</span><span class="line-code"><span class="kw">class</span> <span class="cl">Rectangle</span> <span class="kw">extends</span> <span class="cl">Shape</span> {</span></div><div class="line"><span class="line-num">6</span><span class="line-code">    <span class="cl">Rectangle</span>(<span class="kw">int</span> length, <span class="kw">int</span> breadth) { a = length; b = breadth; }</span></div><div class="line"><span class="line-num">7</span><span class="line-code">    <span class="kw">void</span> <span class="fn">printArea</span>() {</span></div><div class="line"><span class="line-num">8</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Area of Rectangle: "</span> + (a * b));</span></div><div class="line"><span class="line-num">9</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">10</span><span class="line-code">}</span></div><div class="line"><span class="line-num">11</span><span class="line-code"><span class="kw">class</span> <span class="cl">Triangle</span> <span class="kw">extends</span> <span class="cl">Shape</span> {</span></div><div class="line"><span class="line-num">12</span><span class="line-code">    <span class="cl">Triangle</span>(<span class="kw">int</span> base, <span class="kw">int</span> height) { a = base; b = height; }</span></div><div class="line"><span class="line-num">13</span><span class="line-code">    <span class="kw">void</span> <span class="fn">printArea</span>() {</span></div><div class="line"><span class="line-num">14</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Area of Triangle: "</span> + (a * b) / <span class="nu">2.0</span>);</span></div><div class="line"><span class="line-num">15</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">16</span><span class="line-code">}</span></div><div class="line"><span class="line-num">17</span><span class="line-code"><span class="kw">class</span> <span class="cl">Circle</span> <span class="kw">extends</span> <span class="cl">Shape</span> {</span></div><div class="line"><span class="line-num">18</span><span class="line-code">    <span class="cl">Circle</span>(<span class="kw">int</span> radius) { a = radius; }</span></div><div class="line"><span class="line-num">19</span><span class="line-code">    <span class="kw">void</span> <span class="fn">printArea</span>() {</span></div><div class="line"><span class="line-num">20</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Area of Circle: "</span> + Math.PI * a * a);</span></div><div class="line"><span class="line-num">21</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">22</span><span class="line-code">}</span></div><div class="line"><span class="line-num">23</span><span class="line-code"><span class="kw">public class</span> <span class="cl">InterfaceAbstraction</span> {</span></div><div class="line"><span class="line-num">24</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">25</span><span class="line-code">        Shape <span class="va">r</span> = <span class="kw">new</span> <span class="cl">Rectangle</span>(<span class="nu">10</span>, <span class="nu">5</span>);</span></div><div class="line"><span class="line-num">26</span><span class="line-code">        r.<span class="fn">printArea</span>();</span></div><div class="line"><span class="line-num">27</span><span class="line-code">        r = <span class="kw">new</span> <span class="cl">Triangle</span>(<span class="nu">8</span>, <span class="nu">6</span>);</span></div><div class="line"><span class="line-num">28</span><span class="line-code">        r.<span class="fn">printArea</span>();</span></div><div class="line"><span class="line-num">29</span><span class="line-code">        r = <span class="kw">new</span> <span class="cl">Circle</span>(<span class="nu">7</span>);</span></div><div class="line"><span class="line-num">30</span><span class="line-code">        r.<span class="fn">printArea</span>();</span></div><div class="line"><span class="line-num">31</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">32</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Area of Rectangle: 50
+Area of Triangle: 24.0
+Area of Circle: 153.93804002589985</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 16 : EXCEPTION HANDLING
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex16">
+      <div class="section-header">
+        <span class="section-number">EX 16</span>
+        <span class="section-title">Exception Handling</span>
+        <span class="section-desc">User-defined Exceptions</span>
+      </div>
+      <div class="exp-card" id="card-except">
+        <div class="exp-card-header" onclick="toggleCard('card-except')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 16</span>
+            <span class="exp-name">Bank Account — Exception Handling</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">ExceptionHandling.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-except')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-except"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">import</span> java.util.Scanner;</span></div><div class="line"><span class="line-num">2</span><span class="line-code"></span></div><div class="line"><span class="line-num">3</span><span class="line-code"><span class="kw">class</span> <span class="cl">InsufficientBalanceException</span> <span class="kw">extends</span> <span class="cl">Exception</span> {</span></div><div class="line"><span class="line-num">4</span><span class="line-code">    <span class="cl">InsufficientBalanceException</span>(String message) { <span class="kw">super</span>(message); }</span></div><div class="line"><span class="line-num">5</span><span class="line-code">}</span></div><div class="line"><span class="line-num">6</span><span class="line-code"><span class="kw">class</span> <span class="cl">BankAccount</span> {</span></div><div class="line"><span class="line-num">7</span><span class="line-code">    <span class="kw">private double</span> <span class="va">balance</span>;</span></div><div class="line"><span class="line-num">8</span><span class="line-code">    <span class="cl">BankAccount</span>(<span class="kw">double</span> balance) { <span class="kw">this</span>.balance = balance; }</span></div><div class="line"><span class="line-num">9</span><span class="line-code">    <span class="kw">void</span> <span class="fn">deposit</span>(<span class="kw">double</span> amount) <span class="kw">throws</span> Exception {</span></div><div class="line"><span class="line-num">10</span><span class="line-code">        <span class="kw">if</span> (amount &lt;= <span class="nu">0</span>) <span class="kw">throw new</span> <span class="cl">IllegalArgumentException</span>(<span class="st">"Deposit amount must be positive!"</span>);</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        balance += amount;</span></div><div class="line"><span class="line-num">12</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Deposit successful! Current balance: "</span> + balance);</span></div><div class="line"><span class="line-num">13</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">14</span><span class="line-code">    <span class="kw">void</span> <span class="fn">withdraw</span>(<span class="kw">double</span> amount) <span class="kw">throws</span> Exception {</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        <span class="kw">if</span> (amount &lt;= <span class="nu">0</span>) <span class="kw">throw new</span> <span class="cl">IllegalArgumentException</span>(<span class="st">"Withdrawal amount must be positive!"</span>);</span></div><div class="line"><span class="line-num">16</span><span class="line-code">        <span class="kw">if</span> (amount &gt; balance) <span class="kw">throw new</span> <span class="cl">InsufficientBalanceException</span>(<span class="st">"Not enough balance!"</span>);</span></div><div class="line"><span class="line-num">17</span><span class="line-code">        balance -= amount;</span></div><div class="line"><span class="line-num">18</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Withdrawal successful! Current balance: "</span> + balance);</span></div><div class="line"><span class="line-num">19</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">20</span><span class="line-code">    <span class="kw">void</span> <span class="fn">checkBalance</span>() { System.out.<span class="fn">println</span>(<span class="st">"Current balance: "</span> + balance); }</span></div><div class="line"><span class="line-num">21</span><span class="line-code">}</span></div><div class="line"><span class="line-num">22</span><span class="line-code"><span class="kw">public class</span> <span class="cl">ExceptionHandling</span> {</span></div><div class="line"><span class="line-num">23</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">24</span><span class="line-code">        Scanner <span class="va">input</span> = <span class="kw">new</span> <span class="cl">Scanner</span>(System.in);</span></div><div class="line"><span class="line-num">25</span><span class="line-code">        BankAccount <span class="va">acc</span> = <span class="kw">new</span> <span class="cl">BankAccount</span>(<span class="nu">10000</span>);</span></div><div class="line"><span class="line-num">26</span><span class="line-code">        <span class="kw">while</span> (<span class="kw">true</span>) {</span></div><div class="line"><span class="line-num">27</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"\n1.Deposit 2.Withdraw 3.Check Balance 4.Exit"</span>);</span></div><div class="line"><span class="line-num">28</span><span class="line-code">            System.out.<span class="fn">print</span>(<span class="st">"Enter choice: "</span>);</span></div><div class="line"><span class="line-num">29</span><span class="line-code">            <span class="kw">try</span> {</span></div><div class="line"><span class="line-num">30</span><span class="line-code">                <span class="kw">int</span> <span class="va">choice</span> = input.<span class="fn">nextInt</span>();</span></div><div class="line"><span class="line-num">31</span><span class="line-code">                <span class="kw">if</span> (choice == <span class="nu">1</span>) { System.out.<span class="fn">print</span>(<span class="st">"Enter amount: "</span>); acc.<span class="fn">deposit</span>(input.<span class="fn">nextDouble</span>()); }</span></div><div class="line"><span class="line-num">32</span><span class="line-code">                <span class="kw">else if</span> (choice == <span class="nu">2</span>) { System.out.<span class="fn">print</span>(<span class="st">"Enter amount: "</span>); acc.<span class="fn">withdraw</span>(input.<span class="fn">nextDouble</span>()); }</span></div><div class="line"><span class="line-num">33</span><span class="line-code">                <span class="kw">else if</span> (choice == <span class="nu">3</span>) { acc.<span class="fn">checkBalance</span>(); }</span></div><div class="line"><span class="line-num">34</span><span class="line-code">                <span class="kw">else if</span> (choice == <span class="nu">4</span>) { System.out.<span class="fn">println</span>(<span class="st">"Thank you!"</span>); <span class="kw">break</span>; }</span></div><div class="line"><span class="line-num">35</span><span class="line-code">                <span class="kw">else</span> System.out.<span class="fn">println</span>(<span class="st">"Invalid choice"</span>);</span></div><div class="line"><span class="line-num">36</span><span class="line-code">            } <span class="kw">catch</span> (<span class="cl">InsufficientBalanceException</span> e) { System.out.<span class="fn">println</span>(e.<span class="fn">getMessage</span>()); }</span></div><div class="line"><span class="line-num">37</span><span class="line-code">              <span class="kw">catch</span> (<span class="cl">IllegalArgumentException</span> e) { System.out.<span class="fn">println</span>(e.<span class="fn">getMessage</span>()); }</span></div><div class="line"><span class="line-num">38</span><span class="line-code">              <span class="kw">catch</span> (<span class="cl">Exception</span> e) { System.out.<span class="fn">println</span>(<span class="st">"Invalid input"</span>); input.<span class="fn">nextLine</span>(); }</span></div><div class="line"><span class="line-num">39</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">40</span><span class="line-code">        input.<span class="fn">close</span>();</span></div><div class="line"><span class="line-num">41</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">42</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output — Sample Session</div></div>
+            <div class="output-pre"><span class="output-prompt">1.Deposit 2.Withdraw 3.Check Balance 4.Exit</span>
+<span class="output-prompt">Enter choice: </span><span class="output-input">1</span>
+<span class="output-prompt">Enter amount: </span><span class="output-input">5000</span>
+Deposit successful! Current balance: 15000.0
+
+<span class="output-prompt">1.Deposit 2.Withdraw 3.Check Balance 4.Exit</span>
+<span class="output-prompt">Enter choice: </span><span class="output-input">2</span>
+<span class="output-prompt">Enter amount: </span><span class="output-input">3000</span>
+Withdrawal successful! Current balance: 12000.0
+
+<span class="output-prompt">1.Deposit 2.Withdraw 3.Check Balance 4.Exit</span>
+<span class="output-prompt">Enter choice: </span><span class="output-input">2</span>
+<span class="output-prompt">Enter amount: </span><span class="output-input">20000</span>
+<span class="output-error">Not enough balance!</span>
+
+<span class="output-prompt">1.Deposit 2.Withdraw 3.Check Balance 4.Exit</span>
+<span class="output-prompt">Enter choice: </span><span class="output-input">3</span>
+Current balance: 12000.0
+
+<span class="output-prompt">1.Deposit 2.Withdraw 3.Check Balance 4.Exit</span>
+<span class="output-prompt">Enter choice: </span><span class="output-input">4</span>
+Thank you!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         ADDITIONAL PROGRAMS
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="additional">
+      <div class="additional-header">
+        <div class="additional-icon">➕</div>
+        <div>
+          <div class="additional-title">Additional Programs</div>
+          <div class="additional-sub">Extra programs given during lab sessions — not part of the main experiment list</div>
+        </div>
+      </div>
+
+      <!-- Linear Search -->
+      <div class="exp-card" id="card-linear">
+        <div class="exp-card-header" onclick="toggleCard('card-linear')">
+          <div class="exp-card-header-left">
+            <span class="exp-num" style="background:rgba(210,168,255,0.1);border-color:rgba(210,168,255,0.2);color:var(--accent4)">ADD 1</span>
+            <span class="exp-name">Linear Search</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">LinearSearch.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-linear')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-linear"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">public class</span> <span class="cl">LinearSearch</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static int</span> <span class="fn">linearSearch</span>(<span class="kw">int</span>[] arr, <span class="kw">int</span> target) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">for</span> (<span class="kw">int</span> <span class="va">i</span> = <span class="nu">0</span>; i &lt; arr.length; i++) {</span></div><div class="line"><span class="line-num">4</span><span class="line-code">            <span class="kw">if</span> (arr[i] == target) <span class="kw">return</span> i;</span></div><div class="line"><span class="line-num">5</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        <span class="kw">return</span> -<span class="nu">1</span>;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">8</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">9</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">10</span>, <span class="nu">23</span>, <span class="nu">35</span>, <span class="nu">7</span>, <span class="nu">48</span>, <span class="nu">56</span>, <span class="nu">14</span>, <span class="nu">62</span>};</span></div><div class="line"><span class="line-num">10</span><span class="line-code">        <span class="kw">int</span> <span class="va">target</span> = <span class="nu">35</span>;</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        <span class="kw">int</span> <span class="va">result</span> = <span class="fn">linearSearch</span>(arr, target);</span></div><div class="line"><span class="line-num">12</span><span class="line-code">        <span class="kw">if</span> (result != -<span class="nu">1</span>) System.out.<span class="fn">println</span>(<span class="st">"Found at index: "</span> + result);</span></div><div class="line"><span class="line-num">13</span><span class="line-code">        <span class="kw">else</span> System.out.<span class="fn">println</span>(<span class="st">"Not found"</span>);</span></div><div class="line"><span class="line-num">14</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">15</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Found at index: 2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Binary Search -->
+      <div class="exp-card" id="card-binary">
+        <div class="exp-card-header" onclick="toggleCard('card-binary')">
+          <div class="exp-card-header-left">
+            <span class="exp-num" style="background:rgba(210,168,255,0.1);border-color:rgba(210,168,255,0.2);color:var(--accent4)">ADD 2</span>
+            <span class="exp-name">Binary Search</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">BinarySearch.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-binary')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-binary"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">public class</span> <span class="cl">BinarySearch</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static int</span> <span class="fn">binarySearch</span>(<span class="kw">int</span>[] arr, <span class="kw">int</span> target) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        <span class="kw">int</span> <span class="va">low</span> = <span class="nu">0</span>, <span class="va">high</span> = arr.length - <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        <span class="kw">while</span> (low &lt;= high) {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">            <span class="kw">int</span> <span class="va">mid</span> = (low + high) / <span class="nu">2</span>;</span></div><div class="line"><span class="line-num">6</span><span class="line-code">            <span class="kw">if</span> (arr[mid] == target) <span class="kw">return</span> mid;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">            <span class="kw">else if</span> (arr[mid] &lt; target) low = mid + <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">8</span><span class="line-code">            <span class="kw">else</span> high = mid - <span class="nu">1</span>;</span></div><div class="line"><span class="line-num">9</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">10</span><span class="line-code">        <span class="kw">return</span> -<span class="nu">1</span>;</span></div><div class="line"><span class="line-num">11</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">12</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">13</span><span class="line-code">        <span class="kw">int</span>[] <span class="va">arr</span> = {<span class="nu">7</span>, <span class="nu">14</span>, <span class="nu">23</span>, <span class="nu">35</span>, <span class="nu">48</span>, <span class="nu">56</span>, <span class="nu">62</span>, <span class="nu">78</span>};</span></div><div class="line"><span class="line-num">14</span><span class="line-code">        <span class="kw">int</span> <span class="va">target</span> = <span class="nu">48</span>;</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        <span class="kw">int</span> <span class="va">result</span> = <span class="fn">binarySearch</span>(arr, target);</span></div><div class="line"><span class="line-num">16</span><span class="line-code">        <span class="kw">if</span> (result != -<span class="nu">1</span>) System.out.<span class="fn">println</span>(<span class="st">"Found at index: "</span> + result);</span></div><div class="line"><span class="line-num">17</span><span class="line-code">        <span class="kw">else</span> System.out.<span class="fn">println</span>(<span class="st">"Not found!"</span>);</span></div><div class="line"><span class="line-num">18</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">19</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Found at index: 4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <footer>
+    <span>// Java Lab Programs</span>
+    <span>Object Oriented Programming Laboratory &nbsp;·&nbsp; <span>16</span> Experiments</span>
+  </footer>
+</div><!-- /main -->
+
+<script>
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('collapsed');
+  }
+
+  function setActive(el) {
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    closeSidebar();
+  }
+
+  function getPlainCode(preId) {
+    const pre = document.getElementById(preId);
+    if (!pre) return '';
+    return Array.from(pre.querySelectorAll('.line')).map(line => {
+      const codeEl = line.querySelector('.line-code');
+      return codeEl ? codeEl.textContent : '';
+    }).join('\n');
+  }
+
+  function copyCode(btn, preId) {
+    const text = getPlainCode(preId);
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg> Copied!`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg> Copy`;
+      }, 2000);
+    });
+  }
+
+  // Highlight active sidebar item on scroll
+  const anchors = document.querySelectorAll('.anchor');
+  const sidebarLinks = document.querySelectorAll('.sidebar-item');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    anchors.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 130) {
+        current = section.getAttribute('id');
+      
