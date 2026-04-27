@@ -687,6 +687,15 @@
   <a class="sidebar-item" href="#ex16" onclick="setActive(this)">
     <span class="ex-badge">16</span> Exception Handling
   </a>
+  <a class="sidebar-item" href="#ex17" onclick="setActive(this)">
+    <span class="ex-badge">17</span> File Handling
+  </a>
+  <a class="sidebar-item" href="#ex18" onclick="setActive(this)">
+    <span class="ex-badge">18</span> Generic Classes
+  </a>
+  <a class="sidebar-item" href="#ex19" onclick="setActive(this)">
+    <span class="ex-badge">19</span> Collections
+  </a>
 
   <div class="sidebar-divider"></div>
   <div class="sidebar-section-label">Additional</div>
@@ -709,7 +718,7 @@
   <strong>Dept:</strong> ECE 2nd Year
 </div>
     <div class="header-stats">
-      <div class="stat-chip"><div class="stat-dot" style="background:var(--accent2)"></div>16 Experiments</div>
+      <div class="stat-chip"><div class="stat-dot" style="background:var(--accent2)"></div>19 Experiments</div>
       <div class="stat-chip"><div class="stat-dot" style="background:var(--accent4)"></div>2 Additional Programs</div>
       <div class="stat-chip"><div class="stat-dot" style="background:var(--accent5)"></div>Java SE</div>
     </div>
@@ -1419,6 +1428,174 @@ Thank you!</div>
     </div>
 
     <!-- ══════════════════════════════════════
+         EX 17 : FILE HANDLING
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex17">
+      <div class="section-header">
+        <span class="section-number">EX 17</span>
+        <span class="section-title">File Handling</span>
+        <span class="section-desc">Read and write contents using Files</span>
+      </div>
+      <div class="exp-card" id="card-filehandling">
+        <div class="exp-card-header" onclick="toggleCard('card-filehandling')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 17</span>
+            <span class="exp-name">File Handling Demo</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">FileHandlingDemo.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-filehandling')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-filehandling"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">import</span> java.io.*;</span></div><div class="line"><span class="line-num">2</span><span class="line-code"><span class="kw">import</span> java.util.*;</span></div><div class="line"><span class="line-num">3</span><span class="line-code"></span></div><div class="line"><span class="line-num">4</span><span class="line-code"><span class="kw">public class</span> <span class="cl">FileHandlingDemo</span> {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        String <span class="va">source</span> = <span class="st">"names.txt"</span>;</span></div><div class="line"><span class="line-num">7</span><span class="line-code">        String <span class="va">target</span> = <span class="st">"filtered.txt"</span>;</span></div><div class="line"><span class="line-num">8</span><span class="line-code">        Scanner <span class="va">console</span> = <span class="kw">new</span> <span class="cl">Scanner</span>(System.in);</span></div><div class="line"><span class="line-num">9</span><span class="line-code"></span></div><div class="line"><span class="line-num">10</span><span class="line-code">        System.out.<span class="fn">print</span>(<span class="st">"How many names do you want to enter? "</span>);</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        <span class="kw">int</span> <span class="va">n</span> = Integer.<span class="fn">parseInt</span>(console.<span class="fn">nextLine</span>());</span></div><div class="line"><span class="line-num">12</span><span class="line-code"></span></div><div class="line"><span class="line-num">13</span><span class="line-code">        <span class="kw">try</span> (BufferedWriter <span class="va">bw</span> = <span class="kw">new</span> <span class="cl">BufferedWriter</span>(<span class="kw">new</span> <span class="cl">FileWriter</span>(source))) {</span></div><div class="line"><span class="line-num">14</span><span class="line-code">            <span class="kw">for</span> (<span class="kw">int</span> <span class="va">i</span> = <span class="nu">1</span>; i &lt;= n; i++) {</span></div><div class="line"><span class="line-num">15</span><span class="line-code">                System.out.<span class="fn">print</span>(<span class="st">"Enter name "</span> + i + <span class="st">": "</span>);</span></div><div class="line"><span class="line-num">16</span><span class="line-code">                String <span class="va">name</span> = console.<span class="fn">nextLine</span>();</span></div><div class="line"><span class="line-num">17</span><span class="line-code">                bw.<span class="fn">write</span>(name);</span></div><div class="line"><span class="line-num">18</span><span class="line-code">                bw.<span class="fn">newLine</span>();</span></div><div class="line"><span class="line-num">19</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">20</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"\nNames saved to "</span> + source);</span></div><div class="line"><span class="line-num">21</span><span class="line-code">        } <span class="kw">catch</span> (IOException <span class="va">e</span>) {</span></div><div class="line"><span class="line-num">22</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"Write error: "</span> + e.<span class="fn">getMessage</span>());</span></div><div class="line"><span class="line-num">23</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">24</span><span class="line-code"></span></div><div class="line"><span class="line-num">25</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\n--- Reading from "</span> + source + <span class="st">" ---"</span>);</span></div><div class="line"><span class="line-num">26</span><span class="line-code">        <span class="kw">try</span> (BufferedReader <span class="va">br</span> = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(source))) {</span></div><div class="line"><span class="line-num">27</span><span class="line-code">            String <span class="va">line</span>;</span></div><div class="line"><span class="line-num">28</span><span class="line-code">            <span class="kw">while</span> ((line = br.<span class="fn">readLine</span>()) != <span class="kw">null</span>) {</span></div><div class="line"><span class="line-num">29</span><span class="line-code">                System.out.<span class="fn">println</span>(line);</span></div><div class="line"><span class="line-num">30</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">31</span><span class="line-code">        } <span class="kw">catch</span> (IOException <span class="va">e</span>) {</span></div><div class="line"><span class="line-num">32</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"Read error: "</span> + e.<span class="fn">getMessage</span>());</span></div><div class="line"><span class="line-num">33</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">34</span><span class="line-code"></span></div><div class="line"><span class="line-num">35</span><span class="line-code">        System.out.<span class="fn">print</span>(<span class="st">"\nEnter starting letter to copy matching names: "</span>);</span></div><div class="line"><span class="line-num">36</span><span class="line-code">        String <span class="va">letter</span> = console.<span class="fn">nextLine</span>().<span class="fn">toUpperCase</span>();</span></div><div class="line"><span class="line-num">37</span><span class="line-code"></span></div><div class="line"><span class="line-num">38</span><span class="line-code">        <span class="kw">try</span> (BufferedReader <span class="va">br</span> = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(source));</span></div><div class="line"><span class="line-num">39</span><span class="line-code">             BufferedWriter <span class="va">bw</span> = <span class="kw">new</span> <span class="cl">BufferedWriter</span>(<span class="kw">new</span> <span class="cl">FileWriter</span>(target))) {</span></div><div class="line"><span class="line-num">40</span><span class="line-code">            String <span class="va">line</span>;</span></div><div class="line"><span class="line-num">41</span><span class="line-code">            <span class="kw">int</span> <span class="va">count</span> = <span class="nu">0</span>;</span></div><div class="line"><span class="line-num">42</span><span class="line-code">            <span class="kw">while</span> ((line = br.<span class="fn">readLine</span>()) != <span class="kw">null</span>) {</span></div><div class="line"><span class="line-num">43</span><span class="line-code">                <span class="kw">if</span> (line.<span class="fn">toUpperCase</span>().<span class="fn">startsWith</span>(letter)) {</span></div><div class="line"><span class="line-num">44</span><span class="line-code">                    bw.<span class="fn">write</span>(line);</span></div><div class="line"><span class="line-num">45</span><span class="line-code">                    bw.<span class="fn">newLine</span>();</span></div><div class="line"><span class="line-num">46</span><span class="line-code">                    count++;</span></div><div class="line"><span class="line-num">47</span><span class="line-code">                }</span></div><div class="line"><span class="line-num">48</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">49</span><span class="line-code">            System.out.<span class="fn">println</span>(count + <span class="st">" name(s) copied to "</span> + target);</span></div><div class="line"><span class="line-num">50</span><span class="line-code">        } <span class="kw">catch</span> (IOException <span class="va">e</span>) {</span></div><div class="line"><span class="line-num">51</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"Copy error: "</span> + e.<span class="fn">getMessage</span>());</span></div><div class="line"><span class="line-num">52</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">53</span><span class="line-code"></span></div><div class="line"><span class="line-num">54</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\n--- Contents of "</span> + target + <span class="st">" ---"</span>);</span></div><div class="line"><span class="line-num">55</span><span class="line-code">        <span class="kw">try</span> (BufferedReader <span class="va">br</span> = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(target))) {</span></div><div class="line"><span class="line-num">56</span><span class="line-code">            String <span class="va">line</span>;</span></div><div class="line"><span class="line-num">57</span><span class="line-code">            <span class="kw">while</span> ((line = br.<span class="fn">readLine</span>()) != <span class="kw">null</span>) {</span></div><div class="line"><span class="line-num">58</span><span class="line-code">                System.out.<span class="fn">println</span>(line);</span></div><div class="line"><span class="line-num">59</span><span class="line-code">            }</span></div><div class="line"><span class="line-num">60</span><span class="line-code">        } <span class="kw">catch</span> (IOException <span class="va">e</span>) {</span></div><div class="line"><span class="line-num">61</span><span class="line-code">            System.out.<span class="fn">println</span>(<span class="st">"Read error: "</span> + e.<span class="fn">getMessage</span>());</span></div><div class="line"><span class="line-num">62</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">63</span><span class="line-code"></span></div><div class="line"><span class="line-num">64</span><span class="line-code">        console.<span class="fn">close</span>();</span></div><div class="line"><span class="line-num">65</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">66</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output — Sample Session</div></div>
+            <div class="output-pre"><span class="output-prompt">How many names do you want to enter? </span><span class="output-input">5</span>
+<span class="output-prompt">Enter name 1: </span><span class="output-input">Amal</span>
+<span class="output-prompt">Enter name 2: </span><span class="output-input">Ashi</span>
+<span class="output-prompt">Enter name 3: </span><span class="output-input">Praga</span>
+<span class="output-prompt">Enter name 4: </span><span class="output-input">Arjun</span>
+<span class="output-prompt">Enter name 5: </span><span class="output-input">Bala</span>
+
+Names saved to names.txt
+
+--- Reading from names.txt ---
+Amal
+Ashi
+Praga
+Arjun
+Bala
+
+<span class="output-prompt">Enter starting letter to copy matching names: </span><span class="output-input">A</span>
+3 name(s) copied to filtered.txt
+
+--- Contents of filtered.txt ---
+Amal
+Ashi
+Arjun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 18 : GENERIC CLASSES
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex18">
+      <div class="section-header">
+        <span class="section-number">EX 18</span>
+        <span class="section-title">Generic Classes</span>
+        <span class="section-desc">Demonstrate the features of generic classes</span>
+      </div>
+      <div class="exp-card" id="card-generics">
+        <div class="exp-card-header" onclick="toggleCard('card-generics')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 18</span>
+            <span class="exp-name">Generics Demo</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">GenericsDemo.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-generics')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-generics"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">public class</span> <span class="cl">GenericsDemo</span> {</span></div><div class="line"><span class="line-num">2</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">3</span><span class="line-code">        Box&lt;Integer&gt; <span class="va">intBox</span> = <span class="kw">new</span> <span class="cl">Box</span>&lt;&gt;(<span class="nu">100</span>);</span></div><div class="line"><span class="line-num">4</span><span class="line-code">        Box&lt;String&gt; <span class="va">strBox</span> = <span class="kw">new</span> <span class="cl">Box</span>&lt;&gt;(<span class="st">"Hello Java"</span>);</span></div><div class="line"><span class="line-num">5</span><span class="line-code">        Box&lt;Double&gt; <span class="va">dblBox</span> = <span class="kw">new</span> <span class="cl">Box</span>&lt;&gt;(<span class="nu">99.75</span>);</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        Box&lt;Student&gt; <span class="va">objBox</span> = <span class="kw">new</span> <span class="cl">Box</span>&lt;&gt;(<span class="kw">new</span> <span class="cl">Student</span>(<span class="st">"Ashi"</span>, <span class="nu">92</span>));</span></div><div class="line"><span class="line-num">7</span><span class="line-code"></span></div><div class="line"><span class="line-num">8</span><span class="line-code">        intBox.<span class="fn">display</span>();</span></div><div class="line"><span class="line-num">9</span><span class="line-code">        strBox.<span class="fn">display</span>();</span></div><div class="line"><span class="line-num">10</span><span class="line-code">        dblBox.<span class="fn">display</span>();</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        objBox.<span class="fn">display</span>();</span></div><div class="line"><span class="line-num">12</span><span class="line-code"></span></div><div class="line"><span class="line-num">13</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nRetrieving values individually:"</span>);</span></div><div class="line"><span class="line-num">14</span><span class="line-code">        Integer <span class="va">i</span> = intBox.<span class="fn">getValue</span>();</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        String <span class="va">s</span> = strBox.<span class="fn">getValue</span>();</span></div><div class="line"><span class="line-num">16</span><span class="line-code">        Double <span class="va">d</span> = dblBox.<span class="fn">getValue</span>();</span></div><div class="line"><span class="line-num">17</span><span class="line-code">        Student <span class="va">st</span> = objBox.<span class="fn">getValue</span>();</span></div><div class="line"><span class="line-num">18</span><span class="line-code"></span></div><div class="line"><span class="line-num">19</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Integer retrieved : "</span> + i);</span></div><div class="line"><span class="line-num">20</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"String retrieved  : "</span> + s);</span></div><div class="line"><span class="line-num">21</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Double retrieved  : "</span> + d);</span></div><div class="line"><span class="line-num">22</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Object retrieved  : "</span> + st);</span></div><div class="line"><span class="line-num">23</span><span class="line-code"></span></div><div class="line"><span class="line-num">24</span><span class="line-code">        Pair&lt;String, Integer&gt; <span class="va">entry</span> = <span class="kw">new</span> <span class="cl">Pair</span>&lt;&gt;(<span class="st">"Marks"</span>, <span class="nu">92</span>);</span></div><div class="line"><span class="line-num">25</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nPair -&gt; "</span> + entry.<span class="fn">getKey</span>() + <span class="st">" = "</span> + entry.<span class="fn">getValue</span>());</span></div><div class="line"><span class="line-num">26</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">27</span><span class="line-code">}</span></div><div class="line"><span class="line-num">28</span><span class="line-code"></span></div><div class="line"><span class="line-num">29</span><span class="line-code"><span class="kw">class</span> <span class="cl">Box</span>&lt;T&gt; {</span></div><div class="line"><span class="line-num">30</span><span class="line-code">    <span class="kw">private</span> T <span class="va">value</span>;</span></div><div class="line"><span class="line-num">31</span><span class="line-code">    <span class="kw">public</span> <span class="cl">Box</span>(T value) { <span class="kw">this</span>.value = value; }</span></div><div class="line"><span class="line-num">32</span><span class="line-code">    <span class="kw">public</span> T <span class="fn">getValue</span>() { <span class="kw">return</span> value; }</span></div><div class="line"><span class="line-num">33</span><span class="line-code">    <span class="kw">public void</span> <span class="fn">display</span>() {</span></div><div class="line"><span class="line-num">34</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Stored: "</span> + value + <span class="st">" | Type: "</span> + value.<span class="fn">getClass</span>().<span class="fn">getSimpleName</span>());</span></div><div class="line"><span class="line-num">35</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">36</span><span class="line-code">}</span></div><div class="line"><span class="line-num">37</span><span class="line-code"></span></div><div class="line"><span class="line-num">38</span><span class="line-code"><span class="kw">class</span> <span class="cl">Pair</span>&lt;K, V&gt; {</span></div><div class="line"><span class="line-num">39</span><span class="line-code">    <span class="kw">private</span> K <span class="va">key</span>;</span></div><div class="line"><span class="line-num">40</span><span class="line-code">    <span class="kw">private</span> V <span class="va">value</span>;</span></div><div class="line"><span class="line-num">41</span><span class="line-code">    <span class="kw">public</span> <span class="cl">Pair</span>(K key, V value) { <span class="kw">this</span>.key = key; <span class="kw">this</span>.value = value; }</span></div><div class="line"><span class="line-num">42</span><span class="line-code">    <span class="kw">public</span> K <span class="fn">getKey</span>() { <span class="kw">return</span> key; }</span></div><div class="line"><span class="line-num">43</span><span class="line-code">    <span class="kw">public</span> V <span class="fn">getValue</span>() { <span class="kw">return</span> value; }</span></div><div class="line"><span class="line-num">44</span><span class="line-code">}</span></div><div class="line"><span class="line-num">45</span><span class="line-code"></span></div><div class="line"><span class="line-num">46</span><span class="line-code"><span class="kw">class</span> <span class="cl">Student</span> {</span></div><div class="line"><span class="line-num">47</span><span class="line-code">    <span class="kw">private</span> String <span class="va">name</span>;</span></div><div class="line"><span class="line-num">48</span><span class="line-code">    <span class="kw">private int</span> <span class="va">marks</span>;</span></div><div class="line"><span class="line-num">49</span><span class="line-code">    <span class="kw">public</span> <span class="cl">Student</span>(String name, <span class="kw">int</span> marks) { <span class="kw">this</span>.name = name; <span class="kw">this</span>.marks = marks; }</span></div><div class="line"><span class="line-num">50</span><span class="line-code">    <span class="kw">public</span> String <span class="fn">toString</span>() { <span class="kw">return</span> name + <span class="st">"("</span> + marks + <span class="st">")"</span>; }</span></div><div class="line"><span class="line-num">51</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">Stored: 100 | Type: Integer
+Stored: Hello Java | Type: String
+Stored: 99.75 | Type: Double
+Stored: Ashi(92) | Type: Student
+
+Retrieving values individually:
+Integer retrieved : 100
+String retrieved  : Hello Java
+Double retrieved  : 99.75
+Object retrieved  : Ashi(92)
+
+Pair -> Marks = 92</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         EX 19 : COLLECTIONS
+    ══════════════════════════════════════ -->
+    <div class="section anchor" id="ex19">
+      <div class="section-header">
+        <span class="section-number">EX 19</span>
+        <span class="section-title">Collections</span>
+        <span class="section-desc">Demonstrate the use of collections</span>
+      </div>
+      <div class="exp-card" id="card-collections">
+        <div class="exp-card-header" onclick="toggleCard('card-collections')">
+          <div class="exp-card-header-left">
+            <span class="exp-num">EX 19</span>
+            <span class="exp-name">Collections Demo</span>
+            <span class="exp-lang-tag">Java</span>
+          </div>
+          <span class="exp-toggle">▼</span>
+        </div>
+        <div class="exp-body">
+          <div class="code-section">
+            <div class="code-toolbar">
+              <div class="code-toolbar-left">
+                <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                <span class="file-name">CollectionsDemo.java</span>
+              </div>
+              <button class="copy-btn" onclick="copyCode(this, 'code-collections')">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre id="code-collections"><div class="line"><span class="line-num">1</span><span class="line-code"><span class="kw">import</span> java.util.*;</span></div><div class="line"><span class="line-num">2</span><span class="line-code"></span></div><div class="line"><span class="line-num">3</span><span class="line-code"><span class="kw">public class</span> <span class="cl">CollectionsDemo</span> {</span></div><div class="line"><span class="line-num">4</span><span class="line-code">    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {</span></div><div class="line"><span class="line-num">5</span><span class="line-code">        ArrayList&lt;String&gt; <span class="va">list</span> = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();</span></div><div class="line"><span class="line-num">6</span><span class="line-code">        list.<span class="fn">add</span>(<span class="st">"Java"</span>);</span></div><div class="line"><span class="line-num">7</span><span class="line-code">        list.<span class="fn">add</span>(<span class="st">"Python"</span>);</span></div><div class="line"><span class="line-num">8</span><span class="line-code">        list.<span class="fn">add</span>(<span class="st">"C++"</span>);</span></div><div class="line"><span class="line-num">9</span><span class="line-code">        list.<span class="fn">add</span>(<span class="st">"Java"</span>);</span></div><div class="line"><span class="line-num">10</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"ArrayList: "</span> + list);</span></div><div class="line"><span class="line-num">11</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"Size: "</span> + list.<span class="fn">size</span>() + <span class="st">", Element at 1: "</span> + list.<span class="fn">get</span>(<span class="nu">1</span>));</span></div><div class="line"><span class="line-num">12</span><span class="line-code"></span></div><div class="line"><span class="line-num">13</span><span class="line-code">        LinkedList&lt;Integer&gt; <span class="va">queue</span> = <span class="kw">new</span> <span class="cl">LinkedList</span>&lt;&gt;();</span></div><div class="line"><span class="line-num">14</span><span class="line-code">        queue.<span class="fn">add</span>(<span class="nu">10</span>);</span></div><div class="line"><span class="line-num">15</span><span class="line-code">        queue.<span class="fn">add</span>(<span class="nu">20</span>);</span></div><div class="line"><span class="line-num">16</span><span class="line-code">        queue.<span class="fn">add</span>(<span class="nu">30</span>);</span></div><div class="line"><span class="line-num">17</span><span class="line-code">        queue.<span class="fn">addFirst</span>(<span class="nu">5</span>);</span></div><div class="line"><span class="line-num">18</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nLinkedList: "</span> + queue);</span></div><div class="line"><span class="line-num">19</span><span class="line-code"></span></div><div class="line"><span class="line-num">20</span><span class="line-code">        HashSet&lt;String&gt; <span class="va">set</span> = <span class="kw">new</span> <span class="cl">HashSet</span>&lt;&gt;(list);</span></div><div class="line"><span class="line-num">21</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nHashSet (no duplicates): "</span> + set);</span></div><div class="line"><span class="line-num">22</span><span class="line-code"></span></div><div class="line"><span class="line-num">23</span><span class="line-code">        HashMap&lt;Integer, String&gt; <span class="va">map</span> = <span class="kw">new</span> <span class="cl">HashMap</span>&lt;&gt;();</span></div><div class="line"><span class="line-num">24</span><span class="line-code">        map.<span class="fn">put</span>(<span class="nu">101</span>, <span class="st">"Ashi"</span>);</span></div><div class="line"><span class="line-num">25</span><span class="line-code">        map.<span class="fn">put</span>(<span class="nu">102</span>, <span class="st">"Praga"</span>);</span></div><div class="line"><span class="line-num">26</span><span class="line-code">        map.<span class="fn">put</span>(<span class="nu">103</span>, <span class="st">"Amal"</span>);</span></div><div class="line"><span class="line-num">27</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nHashMap: "</span> + map);</span></div><div class="line"><span class="line-num">28</span><span class="line-code"></span></div><div class="line"><span class="line-num">29</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nIterating HashMap:"</span>);</span></div><div class="line"><span class="line-num">30</span><span class="line-code">        <span class="kw">for</span> (Map.Entry&lt;Integer, String&gt; <span class="va">e</span> : map.<span class="fn">entrySet</span>()) {</span></div><div class="line"><span class="line-num">31</span><span class="line-code">            System.out.<span class="fn">println</span>(e.<span class="fn">getKey</span>() + <span class="st">" -&gt; "</span> + e.<span class="fn">getValue</span>());</span></div><div class="line"><span class="line-num">32</span><span class="line-code">        }</span></div><div class="line"><span class="line-num">33</span><span class="line-code"></span></div><div class="line"><span class="line-num">34</span><span class="line-code">        Collections.<span class="fn">sort</span>(list);</span></div><div class="line"><span class="line-num">35</span><span class="line-code">        System.out.<span class="fn">println</span>(<span class="st">"\nSorted ArrayList: "</span> + list);</span></div><div class="line"><span class="line-num">36</span><span class="line-code">    }</span></div><div class="line"><span class="line-num">37</span><span class="line-code">}</span></div></pre>
+          </div>
+          <div class="output-section">
+            <div class="output-toolbar"><div class="output-label"><div class="output-dot"></div>Output</div></div>
+            <div class="output-pre">ArrayList: [Java, Python, C++, Java]
+Size: 4, Element at 1: Python
+
+LinkedList: [5, 10, 20, 30]
+
+HashSet (no duplicates): [Java, C++, Python]
+
+HashMap: {101=Ashi, 102=Praga, 103=Amal}
+
+Iterating HashMap:
+101 -> Ashi
+102 -> Praga
+103 -> Amal
+
+
+Sorted ArrayList: [C++, Java, Java, Python]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
          ADDITIONAL PROGRAMS
     ══════════════════════════════════════ -->
     <div class="section anchor" id="additional">
@@ -1497,7 +1674,7 @@ Thank you!</div>
 
   <footer>
     <span>// Java Lab Programs</span>
-    <span>Object Oriented Programming Laboratory &nbsp;·&nbsp; <span>16</span> Experiments</span>
+    <span>Object Oriented Programming Laboratory &nbsp;·&nbsp; <span>19</span> Experiments</span>
   </footer>
 </div><!-- /main -->
 
